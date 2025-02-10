@@ -5,7 +5,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/gosuri/uitable"
-	"github.com/mikheilgorgadze/todo-app/task"
+	"github.com/mikheilgorgadze/todo-app/models"
 )
 
 
@@ -28,12 +28,12 @@ func ShowMenu() {
 	fmt.Println("2. Add Tasks")
 	fmt.Println("3. Mark Task as Completed")
 	fmt.Println("4. Change Task Priority")
-	fmt.Println("5. Save Tasks to File")
+	fmt.Println("5. Delete Task")
 	fmt.Println("6. Exit program")
 }
 
 
-func ShowTasks(tasks []task.Task) {
+func ShowTasks(tasks []models.Task) {
 	if len(tasks) == 0 {
 		fmt.Println("No tasks available!")
 		return
@@ -42,8 +42,8 @@ func ShowTasks(tasks []task.Task) {
 	table := uitable.New()
 	fmt.Println("Tasks")
 	fmt.Println("--------------------------------")
-	table.AddRow("Task No.", "Status", "Priority Level", "Text")
-	for i, task := range tasks {
+	table.AddRow("Task No.", "Status", "Priority Level", "Description", "Task Added At", "Task Updated At")
+	for _, task := range tasks {
 		status := "Not Completed"
 		if task.Completed {
             status = "Completed"
@@ -54,7 +54,7 @@ func ShowTasks(tasks []task.Task) {
 		} else {
 			ColorCodePriority(&task.Priority)
 		}
-		table.AddRow(i+1, status, task.Priority, task.Text)
+		table.AddRow(task.ID, status, task.Priority, task.Description, task.AddedAt, task.UpdatedAt)
 	}
     fmt.Println(table)
 }

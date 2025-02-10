@@ -1,6 +1,0 @@
-true, Priority Level - Medium, take a nap
-true, Priority Level - Low, play a football
-false, Priority Level - High, Program an application
-false, Priority Level - Low, watch football match
-false, Priority Level - High, some taskk
-false, Priority Level - undefined, another task
