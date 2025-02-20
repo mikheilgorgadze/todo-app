@@ -52,7 +52,7 @@ func (t *TaskController) AddTask() {
 }
 
 func (t *TaskController) MarkTaskCompleted(){
-    taskIndex, err := getTaskIndex("Enter task index to mark it completed: ")
+    taskIndex, err := t.getTaskIndex("Enter task index to mark it completed: ")
     if err!=nil {
         return
     }
@@ -67,7 +67,7 @@ func (t *TaskController) MarkTaskCompleted(){
 }
 
 func (t *TaskController) ChangeTaskPriority() {
-    taskIndex, err := getTaskIndex("Enter task index to change it's priority: ")
+    taskIndex, err := t.getTaskIndex("Enter task index to change it's priority: ")
     if err!=nil {
         return
     }
@@ -83,11 +83,11 @@ func (t *TaskController) ChangeTaskPriority() {
         return
     }
 
-	fmt.Println("Task priority added.")
+	fmt.Println("Task priority changed.")
 }
 
 func (t *TaskController) DeleteTask() {
-    taskIndex, err := getTaskIndex("Enter task index to delete: ")
+    taskIndex, err := t.getTaskIndex("Enter task index to delete: ")
     if err!=nil{
         return
     }
@@ -145,12 +145,25 @@ func getUserInput(s string) string{
 	return strings.TrimSpace(input)
 }
 
-func getTaskIndex(prompt string) (int, error) {
-	taskIndexStr := getUserInput(prompt)
-	taskIndex, err := strconv.Atoi(taskIndexStr)
-	if err!=nil || taskIndex < 1 {
-        fmt.Println("Invalid task index, please try again")
-        return 0, err
+func (t *TaskController) getTaskIndex(prompt string) (int, error) {
+
+    for {
+        taskIndexStr := getUserInput(prompt)
+        taskIndex, err := strconv.Atoi(taskIndexStr)
+        if err!=nil || taskIndex < 1 || !checkTaskIndex(uint32(taskIndex), t.GetTasks()){
+            fmt.Println("Invalid task index, please try again")
+            continue
+        }
+        return taskIndex, nil
     }
-    return taskIndex, nil
+}
+
+func checkTaskIndex(index uint32, tasks []models.Task) bool {
+    for _, task := range tasks {
+        if task.ID == index {
+            return true 
+        }
+    }
+
+    return false
 }
